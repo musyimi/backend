@@ -8,6 +8,29 @@ defmodule Election do
     next_id: 3
   )
 
+  def run() do
+    %Election{} |> run()
+  end
+
+  def run(:quit), do: :quit
+
+  def run(election = %Election{}) do
+     [IO.ANSI.clear(), IO.ANSI.cursor(0,0)]
+     |> IO.write()
+
+     election
+     |> view()
+     |> IO.write()
+
+     command = IO.gets(">")
+
+     election
+     |> update(command)
+     |> run()
+  end
+
+  def update(_election, ["q" <> _]), do: :quit
+
   def update(election, ["v" <> _,id]) do
       vote(election, Integer.parse(id))
   end
